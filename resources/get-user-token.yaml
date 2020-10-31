@@ -63,8 +63,6 @@ get:
             $ref: '../notes.yaml#/components/schemas/Token'
     400:
       $ref: '../notes.yaml#/components/responses/400-BadRequest'
-    401:
-      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
     429:
       $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
     431:
