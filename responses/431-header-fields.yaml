@@ -1,0 +1,20 @@
+description: Request Header Fields Too Large
+content:
+  application/json:
+    example:
+      {
+        "message":"string",
+        "ip":"ip"
+      }
+    schema:
+      $ref: '../notes.yaml#/components/schemas/Error'
+  application/xml:
+    example: |
+      <?xml version="1.0" encoding="UTF-8"?>
+        <error>
+          <message>string</item>
+          <ip>string</item>
+        </error>
+      </xml>
+    schema:
+      $ref: '../notes.yaml#/components/schemas/Error'

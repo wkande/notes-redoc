@@ -1,0 +1,232 @@
+openapi: 3.0.0
+externalDocs:
+  description: View the Node.js code on GitHub.
+  url: 'https://github.com/wkande/notes'
+info:
+  x-logo:
+    url: 'assets/frog.png'
+    altText: Notes
+  license:
+    name: MIT License
+    url: 'https://en.wikipedia.org/wiki/MIT_License'
+  title: Notes API Reference
+  version: '1.1'
+  contact:
+    name: WyoSoft
+    url: https://github.com/wkande
+  description: |
+    # Getting Started
+    Welcome to Notes, a demonstration project created by Warren Anderson to 
+    implement ReDoc and using the docs-as-code philosophy, sometimes referred to as docs-like-code.
+    Other products like GitBook, Docsify and MkDocs are also a great choices.
+    ## Releases
+    A new release of the documentation is produced with every change of the major or minor number <span style="text-decoration: underline;">1<span>.<span style="text-decoration: underline;">0</span>.x in a release of the Notes backend server.
+    
+    ### Current Documentation Releases
+    - v1.1
+    - [**v1.0** via Docsify](https://wkande.github.io/notes-docs-v1.0/)
+
+    ### Notes Backend Releases
+    Go to the [Release Section](https://github.com/wkande/notes/releases) of the **notes repo** for release information about the Notes backend server.
+
+    ## Migration
+    When the Notes backend server reached v1.1.0 a new set of Documentaiton v1.1 was released. The Notes backend server has new functionality.
+
+    >PATCH /note/:id/tags
+
+    This new endpoint removes all tags from a note. As with other endpoints the user's email is pulled from the JWT token to identify the user.
+
+    There are no migration steps required to use the latest release of the Notes backend server.
+    ## Heroku
+
+    There is a **Heroku Dyno** running **Notes**. Call it using CURL, with your App or with Insomnia. The dyno uses a free tier plan and may be idle. Calling an idle dyno may take a moment to come alive. Subsequent calls will be fast.
+
+    Change the **email=me@domain.com** below to your email address. A code will be sent to your email address from support@lelandcreek.com.
+
+    ```bash
+    curl -d "email=me@domain.com" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -X POST https://docs-as-code.herokuapp.com/user/code | json_pp
+    ```
+servers:
+  - url: https://docs-as-code.herokuapp.com
+    description: Default server
+x-tagGroups:
+  - name: API Reference
+    tags:
+      - Users
+      - Notes
+      - Tags
+tags:
+  - name: Users
+    description: In Notes a user is synonymous with an email address. Nothing more is known about the user. Users must authenticate with their email address using the Email-Code-Token mechanism.
+  - name: Notes
+    description: Notes have a simple structure focusing on content and tags. Each note belongs to one email address and has a unique id for DML actions.
+  - name: Tags
+    description: Tags are embedded in notes to aid in searching. A note can have one or many tags. Tags are stored in the note as a string of words.
+paths:
+  /user/code:
+    $ref: '../resources/post-user-code.yaml'
+  /user/token:
+    $ref: '../resources/get-user-token.yaml'
+  /user:
+    get:
+      tags: 
+        - Users
+      summary: Get current User
+      description: |
+        Gets information about the current user. The email address in the JWT token is used to identify the user.
+        ```bash
+        curl  -H "Accept: application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X GET "https://docs-as-code.herokuapp.com/user" | json_pp
+        ```
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+  /notes:
+    get:
+      tags:
+        - Notes
+      summary: Get user's Notes
+      responses:
+          '200':
+            description: OK
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      description: A representation of a honey bee
+      allOf:
+        #- $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            honeyPerDay:
+              type: number
+              description: Average amount of honey produced per day in ounces
+              example: 3.14
+              multipleOf: .01
+          required:
+            - honeyPerDay
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
+    User:
+      type: object
+      properties:
+        email: 
+          type: string
+          description: Email address of the current user
+          example: me@mydomain.com
+        notes_cnt: 
+          type: integer
+          description: Total number of notes associated with the user
+    Code:
+      type: object
+      properties:
+        code:
+          description: Contains information about the code
+          type: object
+
+          properties:
+            email:
+              type: string
+              format: "email=me@mydomain.com"
+              description: Email address of the user
+            message:
+              type: string
+              description: Status of the code sent to the email address
+            ip:
+              type: string
+              description: The ip address from the client making hte request
+    Token:
+      type: object
+      properties:
+        token:
+          description: A JWT token
+          type: string
+    Error:
+      $ref: './schemas/error.yaml'
+  responses:
+    400-BadRequest:
+      $ref: './responses/400-bad-request.yaml'
+    401-Unauthorized:
+      $ref: './responses/401-unauthorized.yaml'
+    429-ToManyRequests:
+      $ref: './responses/429-to-many-requests.yaml'
+    431-HeaderFields431:
+      $ref: './responses/431-header-fields.yaml'
+    5xx:
+      $ref: './responses/5xx.yaml'
+  requestBodies:
+    Pet:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: My Pet
+                title: Pettie
+              #- $ref: '../components/schemas/Pet'
+        application/xml:
+          schema:
+            type: 'object'
+            properties:
+              name:
+                type: string
+                description: hooray
+      description: Pet object that needs to be added to the store
+      required: true
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              #$ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+  securitySchemes:
+    BearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      #bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+      x-codeSamples:
+        - lang: 'bash'
+          source: | 
+            curl -d "email=me@mydomain.com" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -H "Accept:application/json" \
+            -X POST https://docs-as-code.herokuapp.com/user/code | json_pp
+      description: |
+        The APIs implement an **Email-Code-Token** mechanism for authentication using **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)**.
+
+        1. Prompt the user for their **Email Address** and call POST /user/code. The endpoint will send a **Code** to the email address and respond with status=201.
+            ```bash
+            curl -d "email=me@domain.com" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -X POST https://docs-as-code.herokuapp.com/user/code
+            ```
+        2. Prompt the user for their **Code** and **Email** then send it to GET /user/token. The endpoint will respond with a **Token** and status=200.
+            ```bash
+            curl -H "Accept:application/json" \
+            -X GET "https://docs-as-code.herokuapp.com/user/token?email=me@mydomain.com&code=123456" | json_pp
+            ```
+        The **Token** must be used to authenticate all other endpoints
+security:
+  -  BearerAuth: []

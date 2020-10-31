@@ -1,0 +1,73 @@
+get:
+  tags:
+    - Users
+  summary: Get a Token
+  description: |
+    Send the code received from POST /user/code to GET /user/token. The JWT token returned by GET /user/token 
+    is used to access other endpoints.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -H "Accept:application/json" \
+        -X GET "https://docs-as-code.herokuapp.com/user/token?email=me@mydomain.com&code=123456" \
+        | json_pp
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json", 
+                      "Content-Type": "application/x-www-form-urlencoded"}
+        };
+
+        const resp = await axios.post("https://docs-as-code.herokuapp.com/user/code", {"email":"me@mydomain.com"}, options)
+        console.log(resp.data);
+  parameters:
+    - name: email
+      in: query
+      description: The user's email address.
+      required: true
+      schema:
+        type: string
+        example: me@mydomain.com
+    - name: code
+      in: query
+      description: The code was send to the user by POST /user/code. Six numeric digits.
+      required: true
+      schema:
+        type: integer
+        example: 123456
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+  responses:
+    200:
+      description: OK
+      content:
+        application/json:
+          example:
+            {
+              "token":"I87YTGH654GHGH..."
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Token'
+        application/xml:
+          example: |
+            <?xml version="1.0" encoding="UTF-8"?>
+              <token>I87YTGH654GHGH...</token>
+            </xml>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Token'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'

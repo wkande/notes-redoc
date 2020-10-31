@@ -1,0 +1,18 @@
+type: object 
+properties:
+  message:
+    type: string
+    description: Possible indication regarding the error
+  ip:
+    type: string
+    description: The ip address from the client
+    example: 
+      <?xml version="1.0" encoding="UTF-8"?>
+        <error>
+          <message>string</item>
+          <ip>string</item>
+        </error>
+      </xml>
+required:
+  - message
+  - ip
