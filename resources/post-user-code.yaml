@@ -33,7 +33,7 @@ post:
     - name: Content-Type
       in: header
       description: application/x-www-form-urlencoded
-      required: false
+      required: true
       schema:
         type: string
     - name: Accept
@@ -42,12 +42,19 @@ post:
       required: false
       schema:
         type: string
-  requestBody:
+  requestBody: # description: Email address of the user, a code will be sent to the email address
     content:
       application/x-www-form-urlencoded:
         schema:
-          type: string
-          description: Email address of the user, a code will be sent to the email address 
+          type: object
+          title: "title"
+          required:
+            ["email"]
+          properties:
+            email: 
+              type: string
+              format: email
+              description: Email address of the user, a code will be sent to the email address
   responses:
     '201':
       description: Created
@@ -74,8 +81,6 @@ post:
             $ref: '../notes.yaml#/components/schemas/Code'
     400:
       $ref: '../notes.yaml#/components/responses/400-BadRequest'
-    401:
-      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
     429:
       $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
     431:
