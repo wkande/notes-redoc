@@ -66,9 +66,9 @@ tags:
     description: Tags are embedded in notes to aid in searching. A note can have one or many tags. Tags are stored in the note as a string of words.
 paths:
   /user/code:
-    $ref: '../resources/post-user-code.yaml'
+    $ref: './resources/post-user-code.yaml'
   /user/token:
-    $ref: '../resources/get-user-token.yaml'
+    $ref: './resources/get-user-token.yaml'
   /user:
     get:
       tags: 
@@ -143,7 +143,6 @@ components:
         code:
           description: Contains information about the code
           type: object
-
           properties:
             email:
               type: string
@@ -161,6 +160,10 @@ components:
         token:
           description: A JWT token
           type: string
+          properties:
+            token:
+              type: string
+              description: A JWT token
     Error:
       $ref: './schemas/error.yaml'
   responses:
@@ -174,33 +177,6 @@ components:
       $ref: './responses/431-header-fields.yaml'
     5xx:
       $ref: './responses/5xx.yaml'
-  requestBodies:
-    Pet:
-      content:
-        application/json:
-          schema:
-            allOf:
-              - description: My Pet
-                title: Pettie
-              #- $ref: '../components/schemas/Pet'
-        application/xml:
-          schema:
-            type: 'object'
-            properties:
-              name:
-                type: string
-                description: hooray
-      description: Pet object that needs to be added to the store
-      required: true
-    UserArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              #$ref: '#/components/schemas/User'
-      description: List of user object
-      required: true
   securitySchemes:
     BearerAuth:            # arbitrary name for the security scheme
       type: http
