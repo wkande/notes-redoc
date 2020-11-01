@@ -1,9 +1,10 @@
 get:
+  operationId: getToken
   tags:
     - Users
   summary: Get a Token
   description: |
-    Send the code received from POST /user/code to GET /user/token. The JWT token returned by GET /user/token 
+    Send the code received from **POST /user/code** to **GET /user/token**. The JWT token returned by GET /user/token 
     is used to access other endpoints.
   x-codeSamples:
     - lang: 'bash'
@@ -21,6 +22,7 @@ get:
 
         const resp = await axios.post("https://docs-as-code.herokuapp.com/user/code", {"email":"me@mydomain.com"}, options)
         console.log(resp.data);
+  security: []
   parameters:
     - name: email
       in: query
@@ -56,9 +58,7 @@ get:
             $ref: '../notes.yaml#/components/schemas/Token'
         application/xml:
           example: |
-            <?xml version="1.0" encoding="UTF-8"?>
-              <token>I87YTGH654GHGH...</token>
-            </xml>
+            <token>I87YTGH654GHGH...</token>
           schema:
             $ref: '../notes.yaml#/components/schemas/Token'
     400:

@@ -1,0 +1,75 @@
+get:
+  operationId: getCurrentUser
+  tags:
+    - Users
+  summary: Get current User
+  description: |
+    Gets information about the current user. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl  -H "Accept: application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X GET "https://docs-as-code.herokuapp.com/user" \
+        | json_pp
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Authorization": "Bearer 1234FRTG67", 
+                      "Accept":"application/json"}
+        };
+
+        const resp = await axios.get("https://docs-as-code.herokuapp.com/user", 
+          {}, options)
+        console.log(resp.data);
+        security:
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "user": {
+                "email": "me@mydoman.com",
+                "notes_cnt": 55
+              }
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/User'
+        application/xml:
+          example: |
+              <user>
+                <email>me@mydomain.com</email>
+                <notes_cnt>55</notes_cnt>
+              </user>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/User'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'

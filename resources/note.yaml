@@ -1,0 +1,357 @@
+get:
+  operationId: getNote
+  tags:
+    - Notes
+  summary: Get a Note
+  description: |
+    Gets a single note. A note identified by the note's id must belong to the user. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl  -H "Accept: application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X GET "https://docs-as-code.herokuapp.com/user" \
+        | json_pp
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Authorization": "Bearer 1234FRTG67", 
+                      "Accept":"application/json"}
+        };
+
+        const resp = await axios.get("https://docs-as-code.herokuapp.com/user", 
+          {}, options)
+        console.log(resp.data);
+        security:
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: id
+      in: path
+      description: the id of the note to return
+      required: true
+      schema:
+        type: integer
+        example: 34
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "id": "-UB_Ja5Qq",
+              "email": "me@mydomain.com",
+              "content": "This is note content.",
+              "tags": "Tuesday calendar",
+              "dttm": "2020-10-17T13:52:22.027Z"
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+        application/xml:
+          example: |
+            <note>
+              <id>-UB_Ja5Qq</id>
+              <email>me@mydomain.com</email>
+              <content>This is note content.</content>
+              <tags>Tuesday calendar</tags>
+              <dttm>2020-10-17T13:52:22.027Z</dttm>
+            </note>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'
+put:
+  operationId: updateNote
+  tags:
+    - Notes
+  summary: Update a Note
+  description: |
+    Updates the content and/or the tags of a Note using the note's id 
+    and the email address. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -d "content=Check on loan with the bank.&tags=tuesday thursday" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67"
+        -X PUT https://docs-as-code.herokuapp.com/note/X-CKYqQcj \
+        | json_pp
+
+        # Returns the updated note
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json", 
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      "Authorization": "Bearer 1234FRTG67"}
+        };
+
+        const resp = await axios.put("https://docs-as-code.herokuapp.com/note/X-CKYqQcj", 
+          {"content":"Check on loan with the bank.", "tags":"tuesday thursday"}, options)
+        console.log(resp.data);
+
+        // Returns the updated note
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Content-Type
+      in: header
+      description: application/x-www-form-urlencoded
+      required: true
+      schema:
+        type: string
+        example: application/json
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: id
+      in: path
+      description: the id of the note to update
+      required: true
+      schema:
+        type: integer
+        example: 34
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          required:
+            [content]
+          properties:
+            content: 
+              type: string
+              description: replacement content
+            tags: 
+              type: string
+              description: replacement tags
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "id": "-UB_Ja5Qq",
+              "email": "me@mydomain.com",
+              "content": "This content was updated.",
+              "tags": "Tuesday calendar",
+              "dttm": "2020-10-17T13:52:22.027Z"
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+        application/xml:
+          example: |
+            <note>
+              <id>-UB_Ja5Qq</id>
+              <email>me@mydomain.com</email>
+              <content>This content was updated.</content>
+              <tags>Tuesday calendar</tags>
+              <dttm>2020-10-17T13:52:22.027Z</dttm>
+            </note>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'
+delete:
+  operationId: deleteNote
+  tags:
+    - Notes
+  summary: Delete a Note
+  description: |
+    Deletes a Note using the note's id and the email address. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X DELETE https://docs-as-code.herokuapp.com/note/X-CKYqQcj | json_pp
+
+        # Returns no content
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json",
+                      "Authorization": "Bearer 1234FRTG67"}
+        };
+
+        const resp = await axios.delete("https://docs-as-code.herokuapp.com/note/X-CKYqQcj", options)
+        console.log(resp.data);
+
+        // Returns no content
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: id
+      in: path
+      description: the id of the note to delete
+      required: true
+      schema:
+        type: integer
+        example: 34
+  responses:
+    '204':
+      description: No Content
+      content:
+        application/json:
+          example: null
+        application/xml:
+          example: null
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'
+patch:
+  operationId: removeNoteTags
+  tags:
+    - Notes
+  summary: Remove a note's Tags
+  description: |
+    Removes all **Tags** from a Note using the note's id and the email address. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67"
+        -X PATCH https://docs-as-code.herokuapp.com/note/X-CKYqQcj/tags | json_pp
+
+        # Returns the updated note
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json",
+                      "Authorization": "Bearer 1234FRTG67"}
+        };
+
+        const resp = await axios.patch("https://docs-as-code.herokuapp.com/note/X-CKYqQcj/tags",
+          {}, options)
+        console.log(resp.data);
+
+        // Returns the updated note
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: id
+      in: path
+      description: the id of the note to update
+      required: true
+      schema:
+        type: integer
+        example: 34
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "id": "-UB_Ja5Qq",
+              "email": "me@mydomain.com",
+              "content": "This content was updated.",
+              "tags": null,
+              "dttm": "2020-10-17T13:52:22.027Z"
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+        application/xml:
+          example: |
+            <note>
+              <id>-UB_Ja5Qq</id>
+              <email>me@mydomain.com</email>
+              <content>This content was updated.</content>
+              <tags></tags>
+              <dttm>2020-10-17T13:52:22.027Z</dttm>
+            </note>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'

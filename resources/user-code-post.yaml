@@ -1,12 +1,12 @@
 post:
+  operationId: createCode
   tags:
     - Users
   summary: Create a Code
   description: |
-    Collect the user's email address and send it to the POST /user/code endpoint. 
+    Collect the user's email address and send it to the **POST /user/code** endpoint. 
     A six digit code will be sent to the user's email account. 
-    The code should then be sent to [GET /user/token]() 
-    to receive a JWT token to use with other endpoints.
+    The code should then be sent to **GET /user/token** to receive a JWT token to use with other endpoints.
 
     Most email gateways will accept an email address and enter it into a queue 
     to be delivered in the future. This does not guarantee delivery. This endpoint 
@@ -29,6 +29,7 @@ post:
 
         const resp = await axios.post("https://docs-as-code.herokuapp.com/user/code", {"email":"me@mydomain.com"}, options)
         console.log(resp.data);
+  security: []
   parameters:
     - name: Content-Type
       in: header
@@ -42,14 +43,13 @@ post:
       required: false
       schema:
         type: string
-  requestBody: # description: Email address of the user, a code will be sent to the email address
+  requestBody:
     content:
       application/x-www-form-urlencoded:
         schema:
           type: object
-          title: "title"
           required:
-            ["email"]
+            [email]
           properties:
             email: 
               type: string
@@ -62,21 +62,21 @@ post:
         application/json:
           example: 
             {
-              "email":"string",
-              "message":"string",
-              "ip":"string"
+              "code": {
+                "email":"me@mydomain.com",
+                "message":"A code was sent to the email address",
+                "ip":"298.36.2.15"
+              }
             }
           schema:
             $ref: '../notes.yaml#/components/schemas/Code'
         application/xml:
           example: |
-            <?xml version="1.0" encoding="UTF-8"?>
-              <code>
-                <email>string</email>
-                <message>string</item>
-                <ip>string</item>
-              </code>
-            </xml>
+            <code>
+              <email>me@mydomain.com</email>
+              <message>A code was sent to the email address.</item>
+              <ip>298.36.2.15</item>
+            </code>
           schema:
             $ref: '../notes.yaml#/components/schemas/Code'
     400:

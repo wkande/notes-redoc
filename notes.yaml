@@ -20,14 +20,15 @@ info:
     implement ReDoc and using the docs-as-code philosophy, sometimes referred to as docs-like-code.
     Other products like GitBook, Docsify and MkDocs are also a great choices.
     ## Releases
-    A new release of the documentation is produced with every change of the major or minor number <span style="text-decoration: underline;">1<span>.<span style="text-decoration: underline;">0</span>.x in a release of the Notes backend server.
+    A new release of the documentation is produced with every change of the major or minor number 
+    (1.0.x) for releases of the Notes backend server.
     
     ### Current Documentation Releases
     - v1.1
     - [**v1.0** via Docsify](https://wkande.github.io/notes-docs-v1.0/)
 
     ### Notes Backend Releases
-    Go to the [Release Section](https://github.com/wkande/notes/releases) of the **notes repo** for release information about the Notes backend server.
+    Go to the [**Release Section**](https://github.com/wkande/notes/releases) of the **notes repo** on GitHub for release information about the Notes backend server.
 
     ## Migration
     When the Notes backend server reached v1.1.0 a new set of Documentaiton v1.1 was released. The Notes backend server has new functionality.
@@ -59,90 +60,102 @@ x-tagGroups:
       - Tags
 tags:
   - name: Users
-    description: In Notes a user is synonymous with an email address. Nothing more is known about the user. Users must authenticate with their email address using the Email-Code-Token mechanism.
+    description: |
+      In Notes a user is synonymous with an email address. Nothing more is known about the user. Users must authenticate with their 
+      email address using the [Email-Code-Token](#/authenication) mechanism.
   - name: Notes
-    description: Notes have a simple structure focusing on content and tags. Each note belongs to one email address and has a unique id for DML actions.
+    description: |
+      **Notes** have a simple structure focusing on content and tags. Each note belongs to one email address and has 
+      a unique id for DML actions.
+      ```json
+        {
+          "id": "-UB_Ja5Qq",
+          "email": "me@mydomain",
+          "content": "Sent a new token.",
+          "tags": "token Saturday",
+          "ddtm": "2020-10-17T13:52:22.027Z"
+        }
+      ```
   - name: Tags
-    description: Tags are embedded in notes to aid in searching. A note can have one or many tags. Tags are stored in the note as a string of words.
+    description: |
+      **Tags** are embedded in notes to aid in searching. A note can have one or many tags. Tags are stored in the note as a string of words.
+      ```json
+      // "tags" are a group of words 
+      {
+        "id": "-UB_Ja5Qq",
+        "email": "me@mydomain",
+        "content": "Saturday go to the bank and get some cash.",
+        "tags": "cash Saturday", 
+        "ddtm": "2020-10-17T13:52:22.027Z"
+      }
+      ```
 paths:
   /user/code:
-    $ref: './resources/post-user-code.yaml'
+    $ref: './resources/user-code-post.yaml'
   /user/token:
-    $ref: './resources/get-user-token.yaml'
+    $ref: './resources/user-token-get.yaml'
   /user:
-    get:
-      tags: 
-        - Users
-      summary: Get current User
-      description: |
-        Gets information about the current user. The email address in the JWT token is used to identify the user.
-        ```bash
-        curl  -H "Accept: application/json" \
-        -H "Authorization: Bearer 1234FRTG67" \
-        -X GET "https://docs-as-code.herokuapp.com/user" | json_pp
-        ```
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
+    $ref: './resources/user.yaml'
   /notes:
-    get:
-      tags:
-        - Notes
-      summary: Get user's Notes
-      responses:
-          '200':
-            description: OK
+    $ref: './resources/notes.yaml'
+  /note: 
+    $ref: './resources/note-post.yaml'
+  /note/{id}: 
+    $ref: './resources/note.yaml'
+  /tags:
+    $ref: './resources/tags.yaml'
+  /tags/{tag}:
+    $ref: './resources/tags.yaml'
 components:
   schemas:
-    ApiResponse:
+    Note:
       type: object
+      required: [id,email,content,dttm]
       properties:
-        code:
-          type: integer
-          format: int32
-        type:
+        id: 
           type: string
-        message:
+          description: A unique identifier for the note
+          example: UH7_IYT6HF
+        email: 
           type: string
-      description: A representation of a honey bee
-      allOf:
-        #- $ref: '#/components/schemas/Pet'
-        - type: object
-          properties:
-            honeyPerDay:
-              type: number
-              description: Average amount of honey produced per day in ounces
-              example: 3.14
-              multipleOf: .01
-          required:
-            - honeyPerDay
-    Id:
-      type: integer
-      format: int64
-      readOnly: true
+          description: Email address of a user
+          example: me@mydomain.com
+        content: 
+          type: string
+          description: The body or main content of the note
+        tags: 
+          type: string
+          example: Saturday Groceries
+          description: A string of words used to enhance note searching
+        dttm:
+          type: string
+          description: The timestamp the note last experienced DML, system managed
+    Notes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Note"
     User:
       type: object
       properties:
-        email: 
-          type: string
-          description: Email address of the current user
-          example: me@mydomain.com
-        notes_cnt: 
-          type: integer
-          description: Total number of notes associated with the user
+        user:
+          description: Contains information about the user
+          type: object
+          required: [email,note_cnt]
+          properties:
+            email: 
+              type: string
+              description: Email address of the current user
+              example: me@mydomain.com
+            notes_cnt: 
+              type: integer
+              description: Total number of notes associated with the user
     Code:
       type: object
       properties:
         code:
           description: Contains information about the code
           type: object
+          required: [email,message,ip]
           properties:
             email:
               type: string
@@ -156,14 +169,28 @@ components:
               description: The ip address from the client making hte request
     Token:
       type: object
+      required: [token]
       properties:
         token:
           description: A JWT token
           type: string
-          properties:
-            token:
-              type: string
-              description: A JWT token
+    Tags:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+    TagReplace:
+      type: object
+      required: [tag_old,tag_new]
+      properties:
+        tag_old:
+          description: the tag to replace
+          type: string
+        tag_new:
+          description: the new spelling for the tag
+          type: string
     Error:
       $ref: './schemas/error.yaml'
   responses:
@@ -181,7 +208,7 @@ components:
     BearerAuth:            # arbitrary name for the security scheme
       type: http
       scheme: bearer
-      #bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
       x-codeSamples:
         - lang: 'bash'
           source: | 
@@ -198,11 +225,10 @@ components:
             -H "Content-Type: application/x-www-form-urlencoded" \
             -X POST https://docs-as-code.herokuapp.com/user/code
             ```
-        2. Prompt the user for their **Code** and **Email** then send it to GET /user/token. The endpoint will respond with a **Token** and status=200.
+        2. Prompt the user for the **Code** and their **Email**. Send both to GET /user/token. The endpoint will respond with a **Token** and status=200.
             ```bash
             curl -H "Accept:application/json" \
             -X GET "https://docs-as-code.herokuapp.com/user/token?email=me@mydomain.com&code=123456" | json_pp
             ```
         The **Token** must be used to authenticate all other endpoints
-security:
-  -  BearerAuth: []
+

@@ -1,0 +1,84 @@
+get:
+  operationId: getUserTags
+  tags:
+    - Tags
+  summary: Get user's Tags
+  description: |
+    Gets a list of unique **Tags** used within all of a user's notes. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X GET https://docs-as-code.herokuapp.com/tags \
+        | json_pp
+
+        # Returns a list of tags
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Authorization": "Bearer 1234FRTG67",
+                      "Accept":"application/json"}
+        };
+
+        const resp = await axios.get("https://docs-as-code.herokuapp.com/tags", options)
+        console.log(resp.data);
+
+        // Returns a list of tags
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "tags": 
+              [
+                "Monday",
+                "Cash",
+                "Node.js",
+                "Doc",
+                "Triumph"
+              ]
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Tags'
+        application/xml:
+          example: |
+            <tags>
+              <value>Monday</value>
+              <value>Cash</value>
+              <value>Node.js</value>
+              <value>Doc</value>
+              <value>Triumph</value>
+            </tags>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Tags'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'

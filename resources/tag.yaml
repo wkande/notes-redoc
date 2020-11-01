@@ -1,0 +1,174 @@
+put:
+  operationId: updateTag
+  tags:
+    - Tags
+  summary: Update a Tag
+  description: |
+    Updates a particular **Tag** within all notes of the current user. Useful to correct misspelled tags. 
+    The old tag is passed in the path and the new tag spelling is passed in the body. 
+    The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -d "tag=Saturday" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X PUT https://docs-as-code.herokuapp.com/tag/sartuday \
+        | json_pp
+
+        # Returns the old and new tag
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json",
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      "Authorization": "Bearer 1234FRTG67",}
+        };
+
+        const resp = await axios.put("https://docs-as-code.herokuapp.com/tag/sartuday", 
+          {"tag":"Saturday"}, options)
+        console.log(resp.data);
+
+        // Returns the old and new tag
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Content-Type
+      in: header
+      description: application/x-www-form-urlencoded
+      required: true
+      schema:
+        type: string
+        example: application/json
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: tag
+      in: path
+      description: the tag word to be changed
+      required: true
+      schema:
+        type: string
+        example: sartuday
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          required:
+            [tag]
+          properties:
+            tag: 
+              type: string
+              description: replacement tag spelling
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: 
+            {
+              "tag_old":"sartuday",
+              "tag_new":"Saturday"
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/TagReplace'
+        application/xml:
+          example: |
+            <tag_old>sartuday</tagold>
+            <tag_new>Saturday</tag_new>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/TagReplace'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'
+delete:
+  operationId: deleteTag
+  tags:
+    - Tags
+  summary: Delete a Tag
+  description: |
+    Deletes a particular Tag from all notes of the current user. The email address in the JWT token is used to identify the user.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X DELETE https://docs-as-code.herokuapp.com/tag/tuesday
+        | json_pp
+
+        # Returns no content
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json",
+                      "Authorization": "Bearer 1234FRTG67",}
+        };
+
+        const resp = await axios.delete("https://docs-as-code.herokuapp.com/tag/tuesday", options)
+        console.log(resp.data);
+
+        // Returns no content
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+    - name: tag
+      in: path
+      description: the tag word to be deleted
+      required: true
+      schema:
+        type: string
+        example: sartuday
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          example: null
+        application/xml:
+          example: null
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'

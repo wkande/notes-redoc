@@ -1,0 +1,106 @@
+post:
+  operationId: createNote
+  tags:
+    - Notes
+  summary: Create a Note
+  description: |
+    Creates a new Note using the email address in the JWT token passed in the header.
+  x-codeSamples:
+    - lang: 'bash'
+      source: | 
+        curl -d "content=Now is the time to get to the store.&tags=saturday monday" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -H "Accept:application/json" \
+        -H "Authorization: Bearer 1234FRTG67" \
+        -X POST https://docs-as-code.herokuapp.com/note \
+        | json_pp
+
+        # Returns the updated note
+    - lang: 'javascript'
+      source: |
+        const axios = require('axios');
+        const options = {
+          "headers": {"Accept": "application/json",
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      "Authorization": "Bearer 1234FRTG67"}
+        };
+
+        const resp = await axios.post("https://docs-as-code.herokuapp.com/note", 
+          {"content":"Now is the time to get to the store.", "tags":"saturday monday"}, options)
+        console.log(resp.data);
+
+        // Returns the udpated note
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: Content-Type
+      in: header
+      description: application/x-www-form-urlencoded
+      required: true
+      schema:
+        type: string
+        example: application/json
+    - name: Accept
+      in: header
+      description: application/json (default) or application/xml
+      required: false
+      schema:
+        type: string
+        example: application/json
+    - name: Authorization
+      in: header
+      description: JWT token
+      required: true
+      schema:
+        type: string
+        example: Bearer 1234FRTG67
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          required:
+            [content]
+          properties:
+            content: 
+              type: string
+              description: the main content of the note 
+            tags: 
+              type: string
+              description: notes tags to aid in searching
+  responses:
+    '201':
+      description: Created
+      content:
+        application/json:
+          example: 
+            {
+              "id": "DUB6Ja5Qq",
+              "email": "me@mydomain.com",
+              "content": "Now is the time to get to the store.",
+              "tags": "saturday monday",
+              "dttm": "2020-10-17T13:52:22.027Z"
+            }
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+        application/xml:
+          example: |
+            <note>
+              <id>DUB6Ja5Qq</id>
+              <email>me@mydomain.com</email>
+              <content>Now is the time to get to the store.</content>
+              <tags>saturday monday</tags>
+              <dttm>2020-10-17T13:52:22.027Z</dttm>
+            </note>
+          schema:
+            $ref: '../notes.yaml#/components/schemas/Note'
+    400:
+      $ref: '../notes.yaml#/components/responses/400-BadRequest'
+    401:
+      $ref: '../notes.yaml#/components/responses/401-Unauthorized'
+    429:
+      $ref: '../notes.yaml#/components/responses/429-ToManyRequests'
+    431:
+      $ref: '../notes.yaml#/components/responses/431-HeaderFields431'
+    5xx:
+      $ref: '../notes.yaml#/components/responses/5xx'
