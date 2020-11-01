@@ -52,7 +52,7 @@ info:
 servers:
   - url: https://docs-as-code.herokuapp.com
     description: Heroku
-  - url: http:/localhost:3000
+  - url: http:/localhost:3001
     description: Localhost
 x-tagGroups:
   - name: API Reference
