@@ -104,8 +104,8 @@ paths:
     $ref: './resources/note.yaml'
   /tags:
     $ref: './resources/tags.yaml'
-  /tags/{tag}:
-    $ref: './resources/tags.yaml'
+  /tag/{tag}:
+    $ref: './resources/tag.yaml'
 components:
   schemas:
     Note:
