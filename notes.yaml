@@ -51,7 +51,9 @@ info:
     ```
 servers:
   - url: https://docs-as-code.herokuapp.com
-    description: Default server
+    description: Heroku
+  - url: http:/localhost:3000
+    description: Localhost
 x-tagGroups:
   - name: API Reference
     tags:
