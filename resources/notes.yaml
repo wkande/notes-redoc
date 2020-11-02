@@ -46,13 +46,6 @@ get:
       schema:
         type: string
         example: application/json
-    #- name: Authorization
-      #in: header
-      #description: JWT token
-      #required: true
-      #schema:
-        #type: string
-        #example: Bearer 1234FRTG67##
     - name: content
       in: query
       description: text to search the note's content key
