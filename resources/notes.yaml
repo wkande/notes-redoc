@@ -36,8 +36,8 @@ get:
         console.log(resp.data);
 
         // Returns a list of notes
-  #security:
-    #- BearerAuth: []
+  security:
+    - BearerAuth: []
   parameters:
     - name: Accept
       in: header
