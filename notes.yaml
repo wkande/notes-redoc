@@ -16,15 +16,26 @@ info:
     url: https://github.com/wkande
   description: |
     # Getting Started
-    Welcome to Notes, a demonstration project created by Warren Anderson to 
-    implement ReDoc and using the docs-as-code philosophy, sometimes referred to as docs-like-code.
-    Other products like GitBook, Docsify and MkDocs are also a great choices.
+    Welcome to **Notes**, a demonstration project created by Warren Anderson using the 
+    [**docs-like-code**](https://www.docslikecode.com/about/) philosophy to create product documentation. 
+    The Notes project utilizes a fully functional Node.js 
+    backend to host REST APIs and Redis for data storage. Using their email address a user can log in and create simple notes that can be searched 
+    by content and tags.
+
+    Documentaion for **Notes** has been created with **ReDoc** and **Docsify**. ReDoc uses an industry standard OpenAPI specification file and Docsify 
+    uses a loose collection of markdown files. As with docs-like-code practices, both have their source stored in a 
+    version control repostiory. In the case of Notes, GitHub.
+
+    GitHub Documentaion Sources for Notes:
+    - [**ReDoc**](https://github.com/wkande/notes-redoc)
+    - [**Docsify**](https://github.com/wkande/notes-docs-v1.1)
+    
     ## Releases
     A new release of the documentation is produced with every change of the major or minor number 
     (1.0.x) for releases of the Notes backend server.
     
     ### Current Documentation Releases
-    - v1.1
+    - v1.1 via ReDoc
     - [**v1.0** via Docsify](https://wkande.github.io/notes-docs-v1.0/)
 
     ### Notes Backend Releases
@@ -33,22 +44,24 @@ info:
     ## Migration
     When the Notes backend server reached v1.1.0 a new set of Documentaiton v1.1 was released. The Notes backend server has new functionality.
 
-    >PATCH /note/:id/tags
+    >PATCH /note/{id}
 
     This new endpoint removes all tags from a note. As with other endpoints the user's email is pulled from the JWT token to identify the user.
 
-    There are no migration steps required to use the latest release of the Notes backend server.
+    There are no migration steps (v1.0.x > v1.1.x) required to use the APIs of the latest release.
     ## Heroku
 
-    There is a **Heroku Dyno** running **Notes**. Call it using CURL, with your App or with Insomnia. The dyno uses a free tier plan and may be idle. Calling an idle dyno may take a moment to come alive. Subsequent calls will be fast.
+    There is a **Heroku Dyno** running **Notes**. Call it using CURL, Postman, Insomnia or your App. 
+    The dyno uses a free tier plan and may be idle. Calling an idle dyno may take a moment for it to come alive. Subsequent calls will be fast.
 
     Change the **email=me@domain.com** below to your email address. A code will be sent to your email address from support@lelandcreek.com.
-
+    <PullRight>
     ```bash
     curl -d "email=me@domain.com" \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -X POST https://docs-as-code.herokuapp.com/user/code | json_pp
     ```
+    </PullRight>
 servers:
   - url: https://docs-as-code.herokuapp.com
     description: Heroku
@@ -63,8 +76,8 @@ x-tagGroups:
 tags:
   - name: Users
     description: |
-      In Notes a user is synonymous with an email address. Nothing more is known about the user. Users must authenticate with their 
-      email address using the [Email-Code-Token](#/authenication) mechanism.
+      In Notes a **User** is synonymous with an email address. Nothing more is known about the user. Users must authenticate with their 
+      email address using the [**Email-Code-Token**](#section/Authentication) mechanism.
   - name: Notes
     description: |
       **Notes** have a simple structure focusing on content and tags. Each note belongs to one email address and has 
@@ -219,7 +232,8 @@ components:
             -H "Accept:application/json" \
             -X POST https://docs-as-code.herokuapp.com/user/code | json_pp
       description: |
-        The APIs implement an **Email-Code-Token** mechanism for authentication using **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)**.
+        The APIs implement an **Email-Code-Token** mechanism for authentication using 
+        **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)**.
 
         1. Prompt the user for their **Email Address** and call POST /user/code. The endpoint will send a **Code** to the email address and respond with status=201.
             ```bash
@@ -232,5 +246,7 @@ components:
             curl -H "Accept:application/json" \
             -X GET "https://docs-as-code.herokuapp.com/user/token?email=me@mydomain.com&code=123456" | json_pp
             ```
-        The **Token** must be used to authenticate all other endpoints
+        The **Token** must be used to authenticate all other endpoints.
+
+   
 
