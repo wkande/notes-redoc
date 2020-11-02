@@ -55,13 +55,11 @@ info:
     The dyno uses a free tier plan and may be idle. Calling an idle dyno may take a moment for it to come alive. Subsequent calls will be fast.
 
     Change the **email=me@domain.com** below to your email address. A code will be sent to your email address from support@lelandcreek.com.
-    <PullRight>
     ```bash
     curl -d "email=me@domain.com" \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -X POST https://docs-as-code.herokuapp.com/user/code | json_pp
     ```
-    </PullRight>
 servers:
   - url: https://docs-as-code.herokuapp.com
     description: Heroku

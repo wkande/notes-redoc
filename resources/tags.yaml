@@ -4,7 +4,7 @@ get:
     - Tags
   summary: Get user's Tags
   description: |
-    Gets a list of unique **Tags** used within all of a user's notes. The email address in the JWT token is used to identify the user.
+    Gets a list of unique **Tags** used within notes belonging to the current user. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
       source: | 

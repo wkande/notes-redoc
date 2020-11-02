@@ -3,7 +3,7 @@ get:
     - Notes
   summary: Get user's Notes
   description: |
-    Gets a list of all notes associated with a user's email address. The email address in the JWT token is used to identify the user.
+    Gets a list of all **Notes** associated with a user's email address. The email address in the JWT token is used to identify the user.
 
     There is an optional search to filter the notes by content and tags. Optional pagination using skip 
     and limit will determine the number of notes returned.
@@ -140,7 +140,7 @@ delete:
     - Notes
   summary: Delete user's Notes
   description: |
-    Deletes all the Notes of a particular user. The email address in the JWT token is used to identify the user.
+    Deletes all the **Notes** of a particular user. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
       source: | 

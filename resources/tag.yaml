@@ -4,7 +4,7 @@ put:
     - Tags
   summary: Update a Tag
   description: |
-    Updates a particular **Tag** within all notes of the current user. Useful to correct misspelled tags. 
+    Updates a particular **Tag** within all notes belonging to the current user. Useful to correct misspelled tags. 
     The old tag is passed in the path and the new tag spelling is passed in the body. 
     The email address in the JWT token is used to identify the user.
   x-codeSamples:
@@ -108,7 +108,7 @@ delete:
     - Tags
   summary: Delete a Tag
   description: |
-    Deletes a particular Tag from all notes of the current user. The email address in the JWT token is used to identify the user.
+    Deletes a particular **Tag** from all notes belonging to the current user. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
       source: | 

@@ -4,7 +4,7 @@ post:
     - Notes
   summary: Create a Note
   description: |
-    Creates a new Note using the email address in the JWT token passed in the header.
+    Creates a new **Note** using the email address in the JWT token passed in the header.
   x-codeSamples:
     - lang: 'bash'
       source: | 

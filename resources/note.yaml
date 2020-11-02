@@ -4,7 +4,7 @@ get:
     - Notes
   summary: Get a Note
   description: |
-    Gets a single note. A note identified by the note's id must belong to the user. The email address in the JWT token is used to identify the user.
+    Gets a single **Note**. The note, as identified by the note's id, must belong to the user. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
       source: | 
@@ -90,7 +90,7 @@ put:
     - Notes
   summary: Update a Note
   description: |
-    Updates the content and/or the tags of a Note using the note's id 
+    Updates the content and/or the tags of a **Note** using the note's id 
     and the email address. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
@@ -204,7 +204,7 @@ delete:
     - Notes
   summary: Delete a Note
   description: |
-    Deletes a Note using the note's id and the email address. The email address in the JWT token is used to identify the user.
+    Deletes a **Note** using the note's id and the email address. The email address in the JWT token is used to identify the user.
   x-codeSamples:
     - lang: 'bash'
       source: | 
